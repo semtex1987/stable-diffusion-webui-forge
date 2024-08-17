@@ -3,7 +3,6 @@
 import torch
 import bitsandbytes as bnb
 
-from backend import utils
 from bitsandbytes.nn.modules import Params4bit, QuantState
 from bitsandbytes.functional import dequantize_4bit
 
@@ -89,9 +88,9 @@ class ForgeLoader4Bit(torch.nn.Module):
 
     def _apply(self, fn, recurse=True):
         if self.weight is not None:
-            self.weight = utils.tensor2parameter(fn(self.weight))
+            self.weight = fn(self.weight)
         if self.bias is not None:
-            self.bias = utils.tensor2parameter(fn(self.bias))
+            self.bias = torch.nn.Parameter(fn(self.bias), requires_grad=False)
         return self
 
     def _save_to_state_dict(self, destination, prefix, keep_vars):

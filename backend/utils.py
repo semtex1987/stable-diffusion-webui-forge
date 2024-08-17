@@ -93,13 +93,6 @@ def calculate_parameters(sd, prefix=""):
     return params
 
 
-def tensor2parameter(x):
-    if isinstance(x, torch.nn.Parameter):
-        return x
-    else:
-        return torch.nn.Parameter(x, requires_grad=False)
-
-
 def fp16_fix(x):
     # An interesting trick to avoid fp16 overflow
     # Source: https://github.com/lllyasviel/stable-diffusion-webui-forge/issues/1114

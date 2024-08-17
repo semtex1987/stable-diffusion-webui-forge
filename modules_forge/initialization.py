@@ -2,7 +2,6 @@ import os
 import sys
 
 
-INITIALIZED = False
 MONITOR_MODEL_MOVING = False
 
 
@@ -26,13 +25,6 @@ def monitor_module_moving():
 
 
 def initialize_forge():
-    global INITIALIZED
-
-    if INITIALIZED:
-        return
-
-    INITIALIZED = True
-
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'packages_3rdparty'))
 
     bad_list = ['--lowvram', '--medvram', '--medvram-sdxl']
@@ -68,6 +60,9 @@ def initialize_forge():
         from modules_forge.bnb_installer import try_install_bnb
         try_install_bnb()
 
+    import modules_forge.patch_basic
+    modules_forge.patch_basic.patch_all_basics()
+
     from backend import stream
     print('CUDA Using Stream:', stream.should_use_stream())
 
@@ -90,8 +85,4 @@ def initialize_forge():
 
     if 'HF_HUB_CACHE' not in os.environ:
         os.environ['HF_HUB_CACHE'] = diffusers_dir
-
-    import modules_forge.patch_basic
-    modules_forge.patch_basic.patch_all_basics()
-
     return
